@@ -1,0 +1,39 @@
+#!/bin/sh
+# Use gpg encrypt a password and save it in specific directory
+
+if [ -z $PWD_DIR ];then
+    echo "You must specify the directory holds the crypted passwords!"
+    echo 'e.g: export $PWD_DIR="~/.private/passwords/"'
+    exit 1
+fi
+
+if [ $# -lt 2 ];then
+    echo "Usage: $0 <password> <identifier> [recipient] "
+    echo "  The identifier of a password is a unique name,for example,the id 'dropbox' indicates dropbox service's password."
+    echo "  e.g: $0 dropbox"
+    exit 0
+fi
+
+if [ -z "$GPGKEY"  -a -z "$3" ];then
+    echo "The environment variable GPGKEY is not specified,you must specify the recipient."
+    echo "  e.g: $0 abcd dropbox Ryan"
+    echo "       This will encrypt 'abcd' using Ryan's key and save to dropbox in $PWD_DIR"
+    exit 2
+fi
+
+if [ -n $GPGKEY ];then
+    REC=$GPGKEY
+else
+    REC=$3
+fi
+
+PWDFILE=$PWD_DIR/$2
+if [ -e $PWDFILE ];then
+    read -p "File $PWDFILE already exists,do you want to overwrite it?[y]"
+    if [ x$REPLY = 'xn' -o x$REPLY = 'xN' ];then 
+        exit 0
+    fi
+fi
+
+#Encrypt
+echo "$1" | gpg -r $REC -e >$PWDFILE

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+usage="$0 <directory> <port>"
+
+if [ ! -d "$1" ];then
+    DIR=$PWD
+else
+    DIR=$1
+fi
+
+if [ -z "$2" ];then
+    echo $usage
+    exit 1
+fi
+
+
+cd $DIR && nohup python2 -m SimpleHTTPServer $2 >/dev/null &
+
