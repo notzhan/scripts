@@ -1,0 +1,31 @@
+#!/bin/bash
+                                                                                                     
+###################################################
+#git clone git@gist.github.com:b082b3d68dde61a371b9.git ~/todo
+#chmod u+x ~/todo ~/todone
+#if [ -z "$TODO_FILE" ];then                         
+    #export TODO_FILE=~/todo/todo.txt
+    #export TODO_REPO=~/todo
+#fi
+#
+
+
+if [ -z "$TODO_FILE" ]; then
+echo 'Environment variable TODO_FILE must be set.'
+    exit 1
+fi
+if [ "$#" == "0" ];then
+cat $TODO_FILE
+else
+_TODO="• $@"
+    echo "$_TODO" >> $TODO_FILE
+                                                                                                     
+    if [ -n "`which notify-send`" ];then
+echo -e "$_TODO" | notify-send "Add a new todo : $_TODO"
+    fi
+if [ -n "$TODO_REPO" ];then
+		GIT_DIR="$TODO_REPO/.git" GIT_WORK_TREE="$TODO_REPO" git pull -q
+        GIT_DIR="$TODO_REPO/.git" GIT_WORK_TREE="$TODO_REPO" git commit -q -am 'Added new todos'
+        GIT_DIR="$TODO_REPO/.git" GIT_WORK_TREE="$TODO_REPO" git push -q &
+    fi
+fi

@@ -1,0 +1,31 @@
+#!/bin/bash
+                                                                                             
+if [ "`uname -s`" == "Linux" ];then
+SED=sed
+else
+SED=gsed
+fi
+if [ -z "$TODO_FILE" ]; then
+echo "Environment variable TODO_FILE must be set"
+    exit 1
+fi
+_TODOS=`grep -i "$@" $TODO_FILE`
+_NUM=`echo "$*" | grep '^[0-9]\+$'`
+                                                                                             
+if [ -n "$_NUM" ];then
+_SCRIPT="${_NUM}d"
+else
+_SCRIPT="/$*/Id"
+fi
+                                                                                             
+$SED -i -e "$_SCRIPT" $TODO_FILE
+                                                                                             
+if [ -n "$TODO_REPO" ]; then
+    #GIT_DIR="$TODO_REPO/.git" GIT_WORK_TREE="$TODO_REPO" git pull -q
+    GIT_DIR="$TODO_REPO/.git" GIT_WORK_TREE="$TODO_REPO" git commit -q -am 'Removed todo'
+    GIT_DIR="$TODO_REPO/.git" GIT_WORK_TREE="$TODO_REPO" git push -q &
+fi
+if [ -n "`which notify-send`" ]; then
+echo -e "$_TODOS" | notify-send "$_TODOS is DONE"
+fi 
+
