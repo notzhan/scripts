@@ -1,0 +1,56 @@
+#!/bin/bash
+# vim: ft=bash
+scriptName=ae-解压.bash
+pkgver=0.1
+. scriptFunctions
+
+help()
+{
+    echog """
+Usage: %s [options] [file]
+Options:
+--help Print this help info
+--version Print version info
+""" "$0"
+}
+
+while [[ $# > 0 ]] ; do
+    case "$1" in
+        --help)
+            help;exit;;
+        --version)
+            version;exit;;
+        --)
+            shift
+            break;;
+        #-C|--change-directory)
+        #    [ "$2" ] && { directory="$2"; shift 1; } || { echog "Error: Option error" >&2 ; echog "Error: Arg for option \`%s'not found." "$1" ; exit 1 ;}
+        #    ;;
+        -*)
+            dieg "$Ec_OptionError" "未知选项 \`%s'" "$1" >&2
+            exit 1;;
+        *)break;;
+    esac
+    shift
+done
+
+file="$1"
+[ -z "$file" ] && { dieg "$Ec_ProgramError" "没有指定文件" >&2 ; exit 1; }
+shift 1
+
+case "$file" in
+    *.tar)tar -xf "$file";;
+    *.tar.gz|*.tgz)tar -zxf "$file";;
+    *.tar.bz2|*.tbz2)tar -jxf "$file";;
+    *.tar.lzma|*.tlz)tar --lzma -xf "$file";;
+    *.tar.lzip|*.tar.lz|*.tlzip)lzip -dc "$file" | tar -x;;
+    *.zip)unzip "$file";;
+    *.rar)rar x "$file";;
+    *.gz)zcat "$file";;
+    *.bz2)bzcat "$file";;
+    *.lzma)lzcat "$file";;
+    *.lzip|*.lz)lzip -dc "$file";;
+    *)
+        warng "无法根据文件名判断文件类型，尝试tar。" >&2
+        tar -xf "$file";;
+esac
