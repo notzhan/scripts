@@ -40,8 +40,8 @@ shift 1
 
 case "$file" in
     *.tar)tar -xf "$file";;
-    *.tar.gz|*.tgz)tar -zxf "$file";;
-    *.tar.bz2|*.tbz2)tar -jxf "$file";;
+    *.tar.gz|*.tgz)tar -zxvf "$file";;
+    *.tar.bz2|*.tbz2)tar -jxvf "$file";;
     *.tar.lzma|*.tlz)tar --lzma -xf "$file";;
     *.tar.lzip|*.tar.lz|*.tlzip)lzip -dc "$file" | tar -x;;
     *.zip)unzip "$file";;

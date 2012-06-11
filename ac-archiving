@@ -37,9 +37,9 @@ case "$o" in
     *.tar.lzma|*.tlz)
         tar --lzma -cf "$o" "$@";;
     *.tar.gz|*.tgz)
-        tar -zcf "$o" "$@";;
+        tar -zcvf "$o" "$@";;
     *.tar.bz2|*.tbz2)
-        tar -jcf "$o" "$@";;
+        tar -jcvf "$o" "$@";;
     *.tar.lzip|*.tar.lz|*.tlzip)
         tar -c "$@" | lzip -9c > "$o";;
     *.tar)tar -cf "$o" "$@";;
