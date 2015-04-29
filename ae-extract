@@ -45,7 +45,7 @@ case "$file" in
     *.tar.lzma|*.tlz)tar --lzma -xf "$file";;
     *.tar.lzip|*.tar.lz|*.tlzip)lzip -dc "$file" | tar -x;;
     *.zip)unzip "$file";;
-    *.rar)rar x "$file";;
+    *.rar)unrar x "$file";;
     *.gz)zcat "$file";;
     *.bz2)bzcat "$file";;
     *.lzma)lzcat "$file";;
